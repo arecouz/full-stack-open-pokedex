@@ -34,9 +34,6 @@ const PokemonPage = ({ previous, next }) => {
   const hiddenAbility = pokemon.abilities.find(
     (ability) => ability.is_hidden === true
   )
-  if (!previous) {
-    console.log('no prev')
-  }
   return (
     <>
       <div className="links">
