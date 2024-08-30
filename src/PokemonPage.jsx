@@ -18,6 +18,7 @@ const PokemonPage = ({ previous, next }) => {
   if (isLoading) {
     return <LoadingSpinner />
   }
+
   if (error) {
     return <ErrorMessage error={error} />
   }
@@ -33,15 +34,15 @@ const PokemonPage = ({ previous, next }) => {
   const hiddenAbility = pokemon.abilities.find(
     (ability) => ability.is_hidden === true
   )
-
-  /* eslint-disable no-console */
-  console.log('hiddenAbility=', hiddenAbility)
+  if (!previous) {
+    console.log('no prev')
+  }
   return (
     <>
       <div className="links">
         {previous && <Link to={`/pokemon/${previous.name}`}>Previous</Link>}
         <Link to="/">Home</Link>
-        {next && <Link to={`/pokemon/${previous.name}`}>Next</Link>}
+        {next && <Link to={`/pokemon/${next.name}`}>Next</Link>}
       </div>
       <div className={`pokemon-page pokemon-type-${type.name}`}>
         <div
