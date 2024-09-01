@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 const PokemonList = ({ pokemonList }) => {
   return (
     <div className="list-container">
+      <p>testing the deployment process</p>
       {pokemonList.map(({ id, name }) => (
         <Link
           key={id}
