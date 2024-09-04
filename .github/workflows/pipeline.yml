@@ -1,9 +1,5 @@
 name: Pipeline
 
-env:
-  # commit message with #skip, will not deploy, or update version
-  SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
-
 on:
   push:
     branches:
@@ -46,7 +42,7 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
-        if: ${{ (github.event_name == 'push') && (env.SKIP_DEPLOY == 'false')}}
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -54,7 +50,7 @@ jobs:
   tag_release:
     runs-on: ubuntu-20.04
     needs: [simple_deployment_pipeline]
-    if: ${{ (github.event_name == 'push') && (github.env.SKIP_DEPLOY == 'false')}}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
     steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
