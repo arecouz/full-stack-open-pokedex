@@ -1,6 +1,7 @@
 name: Pipeline
 
 env:
+  # commit message with #skip, will not deploy, or update version
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 on:
