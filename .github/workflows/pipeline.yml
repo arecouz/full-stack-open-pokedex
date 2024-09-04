@@ -42,6 +42,7 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
+      # skip deploy on pull, and '#skip' in commit
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
         run: flyctl deploy --remote-only
         env:
@@ -50,6 +51,7 @@ jobs:
   tag_release:
     runs-on: ubuntu-20.04
     needs: [simple_deployment_pipeline]
+    # skip deploy on pull, and '#skip' in commit
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
     steps:
       - uses: actions/checkout@v4
