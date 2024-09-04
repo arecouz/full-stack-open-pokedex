@@ -1,5 +1,8 @@
 name: Pipeline
 
+env:
+  SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
+
 on:
   push:
     branches:
@@ -42,18 +45,18 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
-        if: ${{ github.event_name == 'push' }} # This ensures deployment only happens on push events
+        if: ${{ (github.event_name == 'push') && (env.SKIP_DEPLOY == 'false')}}
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-  tag_release: 
-    runs-on: ubuntu-20.04  
-    needs: [simple_deployment_pipeline] 
-    if: ${{ github.event_name == 'push' }}
-    steps: 
+  tag_release:
+    runs-on: ubuntu-20.04
+    needs: [simple_deployment_pipeline]
+    if: ${{ (github.event_name == 'push') && (env.SKIP_DEPLOY == 'false')}}
+    steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.70.0
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
