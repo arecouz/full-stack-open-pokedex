@@ -6,7 +6,6 @@ on:
       - main
 
 env:
-  # Set a condition based on whether the commit messages contain '#skip'
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
