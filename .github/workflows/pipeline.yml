@@ -66,16 +66,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Success!
-        uses: rjstone/discord-webhook-notify@v1
+        uses: Ilshidur/action-discord@master
         if: success()
         with:
-          severity: info
-          details: deployment successful 
+          args: Deployment successful 
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Failure!
-        uses: rjstone/discord-webhook-notify@v1
+        uses: Ilshidur/action-discord@master
         if: failure()
         with:
-          severity: error
-          details: Test Failed!
+          args: Deployment Failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
