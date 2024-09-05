@@ -49,24 +49,20 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Notify Discord (success)
-        uses: rjstone/discord-webhook-notify@v1
-        if: success()
-        with:
-          severity: info
-          details: |
-            New version of pokedex deployed!
-            Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          uses: rjstone/discord-webhook-notify@v1
+          if: success()
+          with:
+            severity: info
+            details: New version of pokedex deployed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Notify Discord (failure)
-        uses: rjstone/discord-webhook-notify@v1
-        if: failure()
-        with:
-          severity: error
-          details: |
-            New version of pokedex FAILED to deploy.
-            Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          uses: rjstone/discord-webhook-notify@v1
+          if: failure()
+          with:
+            severity: error
+            details: New version of pokedex FAILED to deploy.
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     runs-on: ubuntu-20.04
