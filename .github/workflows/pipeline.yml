@@ -56,7 +56,6 @@ jobs:
           details: |
             New version of pokedex deployed!
             Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-            Time: ${{ steps.time_step.outputs.timestamp }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Notify Discord (failure)
@@ -67,7 +66,6 @@ jobs:
           details: |
             New version of pokedex FAILED to deploy.
             Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-            Time: ${{ steps.time_step.outputs.timestamp }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
