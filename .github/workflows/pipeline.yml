@@ -69,11 +69,12 @@ jobs:
         uses: Ilshidur/action-discord@master
         if: success()
         with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           args: Deployment successful 
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
       - name: Failure!
         uses: Ilshidur/action-discord@master
         if: failure()
         with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           args: Deployment Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
