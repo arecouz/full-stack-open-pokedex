@@ -1,14 +1,7 @@
 name: Periodic Health Check
 'on':
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
+  schedule:
+    - cron: '* * * * *'
 jobs:
   HealthCheck:
     runs-on: ubuntu-20.04
