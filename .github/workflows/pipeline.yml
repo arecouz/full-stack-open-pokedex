@@ -42,7 +42,7 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
-      # skip deploy on pull, and '#skip' in commit
+        # skip deploy on pull, and '#skip' in commit
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
         run: flyctl deploy --remote-only
         env:
@@ -59,3 +59,25 @@ jobs:
         uses: anothrNick/github-tag-action@777684df761b882a3f4f70db16ac70d8cc78d0ea
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  discord-notify:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
+    steps:
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
+        if: success()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: 'Build and deploy - pokedex'
+          GITHUB_JOB_STATUS: ${{ job.status }}
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: 'Build and deploy - pokedex'
+          GITHUB_JOB_STATUS: ${{ job.status }}
