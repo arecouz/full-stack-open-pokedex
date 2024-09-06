@@ -64,17 +64,19 @@ jobs:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
-      - name: Deployment Successful!
-        uses: rjstone/discord-webhook-notify@v1.0.1
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
         if: success()
-        with:
-          severity: info
-          details: Test Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@v1.0.1
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: 'Build and deploy'
+          GITHUB_JOB_STATUS: ${{ job.status }}
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
         if: failure()
-        with:
-          severity: error
-          details: Deployment Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: 'Build and deploy'
+          GITHUB_JOB_STATUS: ${{ job.status }}
