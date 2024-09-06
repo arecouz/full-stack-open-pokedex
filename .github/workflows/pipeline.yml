@@ -42,11 +42,12 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
-      # skip deploy on pull, and '#skip' in commit
+        # skip deploy on pull, and '#skip' in commit
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
 
   tag_release:
     runs-on: ubuntu-20.04
@@ -60,11 +61,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  notify_discord: 
-    runs-on: ubuntu-20.04
+  discord-notify:
     needs: [simple_deployment_pipeline]
-    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
-    steps: 
+    runs-on: ubuntu-20.04
+    steps:
       - name: Test Success
         uses: rjstone/discord-webhook-notify@v1
         if: success()
@@ -72,11 +72,10 @@ jobs:
           severity: info
           details: Test Succeeded!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Test Success
+      - name: Test Failure
         uses: rjstone/discord-webhook-notify@v1
-        if: success()
+        if: failure()
         with:
-          severity: info
-          details: Test Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}      
-    
+          severity: error
+          details: Test Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
