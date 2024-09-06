@@ -63,6 +63,7 @@ jobs:
   discord-notify:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')}}
     steps:
       - name: Notify Discord
         uses: th0th/notify-discord@v0.4.1
@@ -70,7 +71,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: 'Build and deploy'
+          GITHUB_JOB_NAME: 'Build and deploy - pokedex'
           GITHUB_JOB_STATUS: ${{ job.status }}
       - name: Notify Discord
         uses: th0th/notify-discord@v0.4.1
@@ -78,5 +79,5 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: 'Build and deploy'
+          GITHUB_JOB_NAME: 'Build and deploy - pokedex'
           GITHUB_JOB_STATUS: ${{ job.status }}
