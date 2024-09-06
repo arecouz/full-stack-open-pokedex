@@ -48,7 +48,6 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-
   tag_release:
     runs-on: ubuntu-20.04
     needs: [simple_deployment_pipeline]
@@ -65,17 +64,15 @@ jobs:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
-      - name: Test Success
-        uses: rjstone/discord-webhook-notify@v1
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
         if: success()
-        with:
-          severity: info
-          details: Test Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@v1
-        if: failure()
-        with:
-          severity: error
-          details: Test Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_JOB_NAME: 'Deployent Successful!'
+      - name: Notify Discord
+        uses: th0th/notify-discord@v0.4.1
+        if: success()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_JOB_NAME: 'Deployent Failed.'
